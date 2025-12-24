@@ -117,18 +117,18 @@ export default function ProductsGrid({ category }: ProductsGridProps) {
   return (
     <div>
       {/* Filters and Sort */}
-      <div className="bg-white rounded-lg shadow-md p-4 mb-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div className="bg-white rounded-lg shadow-md p-3 sm:p-4 mb-4 sm:mb-6 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 sm:gap-4">
         <button
           onClick={() => setShowFilters(!showFilters)}
-          className="flex items-center gap-2 text-wood-700 hover:text-fire-600 transition"
+          className="flex items-center justify-center gap-2 text-wood-700 hover:text-fire-600 transition px-4 py-2 sm:py-2.5 border border-wood-200 rounded-lg hover:bg-wood-50 sm:border-0 sm:px-0"
         >
-          <Filter size={20} />
-          Фильтры
+          <Filter size={18} className="sm:w-5 sm:h-5" />
+          <span className="text-sm sm:text-base">Фильтры</span>
         </button>
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
-          className="px-4 py-2 border border-wood-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-fire-500"
+          className="px-3 sm:px-4 py-2 text-sm sm:text-base border border-wood-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-fire-500 bg-white"
         >
           <option value="popular">Популярные</option>
           <option value="price-low">Цена: по возрастанию</option>
@@ -138,79 +138,80 @@ export default function ProductsGrid({ category }: ProductsGridProps) {
       </div>
 
       {/* Products Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
         {sortedProducts.map((product) => (
           <div key={product.id} className="card group">
             <div className="relative overflow-hidden bg-wood-100">
               {product.badge && (
-                <div className="absolute top-4 left-4 z-10">
-                  <span className="bg-fire-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                <div className="absolute top-3 left-3 sm:top-4 sm:left-4 z-10">
+                  <span className="bg-fire-600 text-white px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs sm:text-sm font-semibold">
                     {product.badge}
                   </span>
                 </div>
               )}
-                    <div className="absolute top-4 right-4 z-10">
-                      <button
-                        onClick={() => handleToggleFavorite(product)}
-                        className="p-2 bg-white/90 hover:bg-white rounded-full transition"
-                      >
-                        <Heart
-                          size={20}
-                          className={favoritesStore.isFavorite(product.id) ? 'text-red-500 fill-red-500' : 'text-wood-600'}
-                        />
-                      </button>
-                    </div>
+              <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10">
+                <button
+                  onClick={() => handleToggleFavorite(product)}
+                  className="p-1.5 sm:p-2 bg-white/90 hover:bg-white rounded-full transition"
+                  aria-label="Добавить в избранное"
+                >
+                  <Heart
+                    size={16}
+                    className={`sm:w-5 sm:h-5 ${favoritesStore.isFavorite(product.id) ? 'text-red-500 fill-red-500' : 'text-wood-600'}`}
+                  />
+                </button>
+              </div>
               <div className="aspect-square flex items-center justify-center">
                 <div className="w-full h-full bg-gradient-to-br from-wood-200 to-wood-300 flex items-center justify-center">
-                  <span className="text-wood-400 text-4xl">🪵</span>
+                  <span className="text-wood-400 text-3xl sm:text-4xl">🪵</span>
                 </div>
               </div>
             </div>
 
-            <div className="p-6">
-              <div className="flex items-center gap-2 mb-2">
+            <div className="p-4 sm:p-6">
+              <div className="flex items-center gap-1.5 sm:gap-2 mb-2">
                 <div className="flex items-center">
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
-                      size={14}
-                      className={i < Math.floor(product.rating) ? 'text-fire-500 fill-fire-500' : 'text-wood-300'}
+                      size={12}
+                      className={`sm:w-3.5 sm:h-3.5 ${i < Math.floor(product.rating) ? 'text-fire-500 fill-fire-500' : 'text-wood-300'}`}
                     />
                   ))}
                 </div>
-                <span className="text-sm text-wood-600">({product.reviews})</span>
+                <span className="text-xs sm:text-sm text-wood-600">({product.reviews})</span>
               </div>
 
-              <h3 className="text-lg font-semibold text-wood-900 mb-3 line-clamp-2">
+              <h3 className="text-base sm:text-lg font-semibold text-wood-900 mb-2 sm:mb-3 line-clamp-2 min-h-[3rem]">
                 {product.name}
               </h3>
 
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-3 sm:mb-4">
                 <div>
                   {product.originalPrice ? (
-                    <div>
-                      <span className="text-wood-400 line-through text-sm mr-2">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                      <span className="text-wood-400 line-through text-xs sm:text-sm">
                         {product.originalPrice.toLocaleString('ru-RU')} ₽
                       </span>
-                      <span className="text-2xl font-bold text-fire-600">
+                      <span className="text-xl sm:text-2xl font-bold text-fire-600">
                         {product.price.toLocaleString('ru-RU')} ₽
                       </span>
                     </div>
                   ) : (
-                    <span className="text-2xl font-bold text-wood-900">
+                    <span className="text-xl sm:text-2xl font-bold text-wood-900">
                       {product.price.toLocaleString('ru-RU')} ₽
                     </span>
                   )}
                 </div>
               </div>
 
-                  <button
-                    onClick={() => handleAddToCart(product)}
-                    className="w-full btn-primary flex items-center justify-center gap-2"
-                  >
-                    <ShoppingCart size={20} />
-                    В корзину
-                  </button>
+              <button
+                onClick={() => handleAddToCart(product)}
+                className="w-full btn-primary flex items-center justify-center gap-2 text-sm sm:text-base py-2.5 sm:py-3"
+              >
+                <ShoppingCart size={18} className="sm:w-5 sm:h-5" />
+                В корзину
+              </button>
             </div>
           </div>
         ))}

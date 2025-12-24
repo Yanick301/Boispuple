@@ -3,14 +3,14 @@ import { Package, Leaf, Flame, Award } from 'lucide-react'
 
 export default function PelletsPage() {
   return (
-    <div className="py-12 bg-wood-50 min-h-screen">
-      <div className="container mx-auto px-4">
+    <div className="py-8 sm:py-12 bg-wood-50 min-h-screen">
+      <div className="container mx-auto px-4 sm:px-6">
         {/* Hero Section */}
-        <div className="mb-12 text-center">
-          <h1 className="text-4xl md:text-5xl font-serif font-bold text-wood-900 mb-4">
+        <div className="mb-8 sm:mb-12 text-center">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-wood-900 mb-3 sm:mb-4 px-4">
             Пеллеты и гранулы
           </h1>
-          <p className="text-lg text-wood-600 max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg text-wood-600 max-w-3xl mx-auto px-4">
             Экологичные пеллеты премиум класса для эффективного и экономичного отопления. 
             Высокая теплоотдача и удобство использования.
           </p>

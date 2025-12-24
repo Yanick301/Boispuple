@@ -3,10 +3,10 @@ import { Wrench, Shield, Package, Sparkles } from 'lucide-react'
 
 export default function AccessoriesPage() {
   return (
-    <div className="py-12 bg-wood-50 min-h-screen">
-      <div className="container mx-auto px-4">
+    <div className="py-8 sm:py-12 bg-wood-50 min-h-screen">
+      <div className="container mx-auto px-4 sm:px-6">
         {/* Hero Section */}
-        <div className="mb-12 text-center">
+        <div className="mb-8 sm:mb-12 text-center">
           <h1 className="text-4xl md:text-5xl font-serif font-bold text-wood-900 mb-4">
             Аксессуары для отопления
           </h1>

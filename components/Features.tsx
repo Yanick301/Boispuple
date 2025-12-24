@@ -28,24 +28,24 @@ const features = [
 
 export default function Features() {
   return (
-    <section className="py-20 bg-wood-900 text-white">
-      <div className="container mx-auto px-4">
+    <section className="py-12 sm:py-16 md:py-20 bg-wood-900 text-white">
+      <div className="container mx-auto px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="text-center mb-8 sm:mb-12"
         >
-          <h2 className="text-4xl md:text-5xl font-serif font-bold mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold mb-3 sm:mb-4 px-4">
             Почему выбирают нас
           </h2>
-          <p className="text-lg text-wood-300 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg text-wood-300 max-w-2xl mx-auto px-4">
             Мы заботимся о вашем комфорте и предлагаем только лучшее
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {features.map((feature, index) => {
             const Icon = feature.icon
             return (
@@ -55,13 +55,13 @@ export default function Features() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="text-center"
+                className="text-center px-4"
               >
-                <div className="bg-fire-600/20 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
-                  <Icon size={40} className="text-fire-400" />
+                <div className="bg-fire-600/20 rounded-full w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                  <Icon size={32} className="sm:w-10 sm:h-10 text-fire-400" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                <p className="text-wood-300">{feature.description}</p>
+                <h3 className="text-lg sm:text-xl font-semibold mb-2">{feature.title}</h3>
+                <p className="text-sm sm:text-base text-wood-300">{feature.description}</p>
               </motion.div>
             )
           })}

@@ -33,24 +33,24 @@ export default function Header() {
       {/* Top Bar */}
       <div className="bg-wood-900 text-white py-2">
         <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center text-sm">
-            <div className="flex items-center gap-4">
-              <a href="tel:+79991234567" className="flex items-center gap-2 hover:text-fire-400 transition">
-                <Phone size={16} />
-                <span>+7 (999) 123-45-67</span>
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-0 text-xs sm:text-sm">
+            <div className="flex items-center gap-3 sm:gap-4">
+              <a href="tel:+79991234567" className="flex items-center gap-1.5 sm:gap-2 hover:text-fire-400 transition whitespace-nowrap">
+                <Phone size={14} className="sm:w-4 sm:h-4" />
+                <span className="text-xs sm:text-sm">+7 (999) 123-45-67</span>
               </a>
-              <span className="hidden md:inline">Доставка 24/7</span>
+              <span className="hidden sm:inline">Доставка 24/7</span>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3 sm:gap-4">
               {user ? (
-                <Link href="/profile" className="flex items-center gap-2 hover:text-fire-400 transition">
-                  <User size={16} />
-                  <span>Мой профиль</span>
+                <Link href="/profile" className="flex items-center gap-1.5 sm:gap-2 hover:text-fire-400 transition whitespace-nowrap">
+                  <User size={14} className="sm:w-4 sm:h-4" />
+                  <span className="hidden xs:inline text-xs sm:text-sm">Мой профиль</span>
                 </Link>
               ) : (
-                <Link href="/login" className="flex items-center gap-2 hover:text-fire-400 transition">
-                  <User size={16} />
-                  <span>Войти / Регистрация</span>
+                <Link href="/login" className="flex items-center gap-1.5 sm:gap-2 hover:text-fire-400 transition whitespace-nowrap">
+                  <User size={14} className="sm:w-4 sm:h-4" />
+                  <span className="text-xs sm:text-sm">Войти / Регистрация</span>
                 </Link>
               )}
             </div>
@@ -59,16 +59,16 @@ export default function Header() {
       </div>
 
       {/* Main Header */}
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
+      <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
+        <div className="flex items-center justify-between gap-2 sm:gap-4">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3">
-            <div className="bg-fire-600 text-white p-3 rounded-lg">
-              <span className="text-2xl font-bold">ДП</span>
+          <Link href="/" className="flex items-center gap-2 sm:gap-3 min-w-0 flex-shrink-0">
+            <div className="bg-fire-600 text-white p-2 sm:p-3 rounded-lg flex-shrink-0">
+              <span className="text-xl sm:text-2xl font-bold">ДП</span>
             </div>
-            <div>
-              <h1 className="text-2xl font-serif font-bold text-wood-900">ДРОВА ПРЕМИУМ</h1>
-              <p className="text-xs text-wood-600">Качество и надежность</p>
+            <div className="min-w-0 hidden xs:block">
+              <h1 className="text-lg sm:text-xl md:text-2xl font-serif font-bold text-wood-900 truncate">ДРОВА ПРЕМИУМ</h1>
+              <p className="text-xs text-wood-600 hidden sm:block">Качество и надежность</p>
             </div>
           </Link>
 
@@ -86,34 +86,37 @@ export default function Header() {
           </nav>
 
           {/* Actions */}
-          <div className="flex items-center gap-4">
-            <button className="p-2 hover:bg-wood-100 rounded-lg transition">
-              <Search size={24} className="text-wood-700" />
+          <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 flex-shrink-0">
+            <button className="p-1.5 sm:p-2 hover:bg-wood-100 rounded-lg transition" aria-label="Поиск">
+              <Search size={18} className="sm:w-6 sm:h-6 text-wood-700" />
             </button>
             <Link
               href="/favorites"
-              className="relative p-2 hover:bg-wood-100 rounded-lg transition"
+              className="relative p-1.5 sm:p-2 hover:bg-wood-100 rounded-lg transition"
+              aria-label="Избранное"
             >
-              <Heart size={24} className="text-wood-700" />
+              <Heart size={18} className="sm:w-6 sm:h-6 text-wood-700" />
             </Link>
             <Link
               href="/cart"
-              className="relative p-2 hover:bg-wood-100 rounded-lg transition"
+              className="relative p-1.5 sm:p-2 hover:bg-wood-100 rounded-lg transition"
+              aria-label="Корзина"
             >
-              <ShoppingCart size={24} className="text-wood-700" />
+              <ShoppingCart size={18} className="sm:w-6 sm:h-6 text-wood-700" />
               {cartCount > 0 && (
-                <span className="absolute top-0 right-0 bg-fire-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
-                  {cartCount}
+                <span className="absolute -top-1 -right-1 bg-fire-600 text-white text-[10px] sm:text-xs rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center font-bold">
+                  {cartCount > 9 ? '9+' : cartCount}
                 </span>
               )}
             </Link>
             {user && (
-              <div className="relative">
+              <div className="relative hidden sm:block">
                 <button
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="p-2 hover:bg-wood-100 rounded-lg transition"
+                  className="p-1.5 sm:p-2 hover:bg-wood-100 rounded-lg transition"
+                  aria-label="Меню пользователя"
                 >
-                  <div className="w-8 h-8 bg-gradient-to-br from-fire-500 to-fire-700 rounded-full flex items-center justify-center text-white font-bold">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-fire-500 to-fire-700 rounded-full flex items-center justify-center text-white text-xs sm:text-sm font-bold">
                     {user.email?.[0]?.toUpperCase() || 'U'}
                   </div>
                 </button>
@@ -149,24 +152,25 @@ export default function Header() {
             )}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="lg:hidden p-2 hover:bg-wood-100 rounded-lg transition"
+              className="lg:hidden p-1.5 sm:p-2 hover:bg-wood-100 rounded-lg transition"
+              aria-label="Меню"
             >
               {isMenuOpen ? (
-                <X size={24} className="text-wood-700" />
+                <X size={20} className="sm:w-6 sm:h-6 text-wood-700" />
               ) : (
-                <Menu size={24} className="text-wood-700" />
+                <Menu size={20} className="sm:w-6 sm:h-6 text-wood-700" />
               )}
             </button>
           </div>
         </div>
 
         {/* Categories Bar */}
-        <div className="hidden md:flex items-center gap-6 mt-4 pb-2 border-b border-wood-200">
+        <div className="hidden md:flex items-center gap-4 lg:gap-6 mt-3 sm:mt-4 pb-2 border-b border-wood-200 overflow-x-auto">
           {categories.map((category) => (
             <Link
               key={category.name}
               href={category.href}
-              className="text-sm text-wood-600 hover:text-fire-600 transition-colors"
+              className="text-xs md:text-sm text-wood-600 hover:text-fire-600 transition-colors whitespace-nowrap"
             >
               {category.name}
             </Link>

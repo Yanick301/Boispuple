@@ -96,22 +96,22 @@ export default function FeaturedProducts() {
   }
 
   return (
-    <section className="py-20 bg-gradient-to-b from-wood-50 to-white">
-      <div className="container mx-auto px-4">
+    <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-wood-50 to-white">
+      <div className="container mx-auto px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="text-center mb-8 sm:mb-12"
         >
-          <h2 className="section-title">Популярные товары</h2>
-          <p className="section-subtitle">
+          <h2 className="section-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl">Популярные товары</h2>
+          <p className="section-subtitle text-base sm:text-lg md:text-xl px-4">
             Выберите лучшее для вашего дома из нашего каталога
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
           {products.map((product, index) => (
             <motion.div
               key={product.id}
@@ -150,37 +150,37 @@ export default function FeaturedProducts() {
                 </div>
 
                 {/* Content */}
-                <div className="p-6">
+                <div className="p-4 sm:p-6">
                   <div className="flex items-center gap-2 mb-2">
                     <div className="flex items-center">
                       {[...Array(5)].map((_, i) => (
                         <Star
                           key={i}
-                          size={14}
-                          className={i < Math.floor(product.rating) ? 'text-fire-500 fill-fire-500' : 'text-wood-300'}
+                          size={12}
+                          className={`sm:w-3.5 sm:h-3.5 ${i < Math.floor(product.rating) ? 'text-fire-500 fill-fire-500' : 'text-wood-300'}`}
                         />
                       ))}
                     </div>
-                    <span className="text-sm text-wood-600">({product.reviews})</span>
+                    <span className="text-xs sm:text-sm text-wood-600">({product.reviews})</span>
                   </div>
 
-                  <h3 className="text-lg font-semibold text-wood-900 mb-3 line-clamp-2">
+                  <h3 className="text-base sm:text-lg font-semibold text-wood-900 mb-2 sm:mb-3 line-clamp-2 min-h-[3rem]">
                     {product.name}
                   </h3>
 
-                  <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center justify-between mb-3 sm:mb-4">
                     <div>
                       {product.originalPrice ? (
-                        <div>
-                          <span className="text-wood-400 line-through text-sm mr-2">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                          <span className="text-wood-400 line-through text-xs sm:text-sm">
                             {product.originalPrice.toLocaleString('ru-RU')} ₽
                           </span>
-                          <span className="text-2xl font-bold text-fire-600">
+                          <span className="text-xl sm:text-2xl font-bold text-fire-600">
                             {product.price.toLocaleString('ru-RU')} ₽
                           </span>
                         </div>
                       ) : (
-                        <span className="text-2xl font-bold text-wood-900">
+                        <span className="text-xl sm:text-2xl font-bold text-wood-900">
                           {product.price.toLocaleString('ru-RU')} ₽
                         </span>
                       )}
@@ -189,9 +189,9 @@ export default function FeaturedProducts() {
 
                   <button
                     onClick={() => handleAddToCart(product)}
-                    className="w-full btn-primary flex items-center justify-center gap-2"
+                    className="w-full btn-primary flex items-center justify-center gap-2 text-sm sm:text-base py-2.5 sm:py-3"
                   >
-                    <ShoppingCart size={20} />
+                    <ShoppingCart size={18} className="sm:w-5 sm:h-5" />
                     В корзину
                   </button>
                 </div>
@@ -200,8 +200,8 @@ export default function FeaturedProducts() {
           ))}
         </div>
 
-        <div className="text-center">
-          <Link href="/products" className="btn-outline text-lg px-8 py-4">
+        <div className="text-center px-4">
+          <Link href="/products" className="btn-outline text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 inline-block">
             Смотреть все товары
           </Link>
         </div>

@@ -20,55 +20,55 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="min-h-screen bg-wood-50 py-20">
-      <div className="container mx-auto px-4">
+    <div className="min-h-screen bg-wood-50 py-12 sm:py-16 md:py-20">
+      <div className="container mx-auto px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-serif font-bold text-wood-900 mb-4">
+          <div className="text-center mb-8 sm:mb-12">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-wood-900 mb-3 sm:mb-4 px-4">
               Свяжитесь с нами
             </h1>
-            <p className="text-lg text-wood-600">
+            <p className="text-base sm:text-lg text-wood-600 px-4">
               Мы всегда готовы ответить на ваши вопросы
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
             {/* Contact Info */}
-            <div className="space-y-6">
-              <div className="bg-white rounded-xl shadow-lg p-8">
-                <h2 className="text-2xl font-semibold text-wood-900 mb-6">
+            <div className="space-y-4 sm:space-y-6">
+              <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8">
+                <h2 className="text-xl sm:text-2xl font-semibold text-wood-900 mb-4 sm:mb-6">
                   Контактная информация
                 </h2>
-                <div className="space-y-6">
-                  <div className="flex items-start gap-4">
-                    <div className="bg-fire-100 p-3 rounded-lg">
-                      <Phone className="text-fire-600" size={24} />
+                <div className="space-y-4 sm:space-y-6">
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <div className="bg-fire-100 p-2 sm:p-3 rounded-lg flex-shrink-0">
+                      <Phone className="text-fire-600" size={20} />
                     </div>
-                    <div>
-                      <h3 className="font-semibold text-wood-900 mb-1">Телефон</h3>
-                      <a href="tel:+79991234567" className="text-wood-600 hover:text-fire-600 transition">
+                    <div className="min-w-0">
+                      <h3 className="font-semibold text-sm sm:text-base text-wood-900 mb-1">Телефон</h3>
+                      <a href="tel:+79991234567" className="text-sm sm:text-base text-wood-600 hover:text-fire-600 transition break-all">
                         +7 (999) 123-45-67
                       </a>
                     </div>
                   </div>
-                  <div className="flex items-start gap-4">
-                    <div className="bg-fire-100 p-3 rounded-lg">
-                      <Mail className="text-fire-600" size={24} />
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <div className="bg-fire-100 p-2 sm:p-3 rounded-lg flex-shrink-0">
+                      <Mail className="text-fire-600" size={20} />
                     </div>
-                    <div>
-                      <h3 className="font-semibold text-wood-900 mb-1">Email</h3>
-                      <a href="mailto:info@drovapremium.ru" className="text-wood-600 hover:text-fire-600 transition">
+                    <div className="min-w-0">
+                      <h3 className="font-semibold text-sm sm:text-base text-wood-900 mb-1">Email</h3>
+                      <a href="mailto:info@drovapremium.ru" className="text-sm sm:text-base text-wood-600 hover:text-fire-600 transition break-all">
                         info@drovapremium.ru
                       </a>
                     </div>
                   </div>
-                  <div className="flex items-start gap-4">
-                    <div className="bg-fire-100 p-3 rounded-lg">
-                      <MapPin className="text-fire-600" size={24} />
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <div className="bg-fire-100 p-2 sm:p-3 rounded-lg flex-shrink-0">
+                      <MapPin className="text-fire-600" size={20} />
                     </div>
-                    <div>
-                      <h3 className="font-semibold text-wood-900 mb-1">Адрес</h3>
-                      <p className="text-wood-600">
+                    <div className="min-w-0">
+                      <h3 className="font-semibold text-sm sm:text-base text-wood-900 mb-1">Адрес</h3>
+                      <p className="text-sm sm:text-base text-wood-600">
                         Москва, ул. Лесная, д. 15
                       </p>
                     </div>
@@ -76,8 +76,8 @@ export default function ContactPage() {
                 </div>
               </div>
 
-              <div className="bg-gradient-to-br from-fire-600 to-fire-800 text-white rounded-xl shadow-lg p-8">
-                <h3 className="text-xl font-semibold mb-4">Режим работы</h3>
+              <div className="bg-gradient-to-br from-fire-600 to-fire-800 text-white rounded-xl shadow-lg p-6 sm:p-8">
+                <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Режим работы</h3>
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span>Понедельник - Пятница</span>
