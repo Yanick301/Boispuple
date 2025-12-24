@@ -1,0 +1,212 @@
+'use client'
+
+import { motion } from 'framer-motion'
+import Link from 'next/link'
+import { ShoppingCart, Star, Heart } from 'lucide-react'
+import { useCartStore } from '@/lib/store/cartStore'
+import { useFavoritesStore } from '@/lib/store/favoritesStore'
+import toast from 'react-hot-toast'
+
+const products = [
+  {
+    id: 1,
+    name: 'Дрова дубовые 30 см - 3,1 стера',
+    price: 4510,
+    originalPrice: null,
+    image: '/api/placeholder/400/400',
+    rating: 4.8,
+    reviews: 124,
+    badge: 'Хит продаж',
+  },
+  {
+    id: 2,
+    name: 'Дрова 25 см - 2,60 стера в упаковке',
+    price: 4300,
+    originalPrice: null,
+    image: '/api/placeholder/400/400',
+    rating: 4.9,
+    reviews: 89,
+    badge: null,
+  },
+  {
+    id: 3,
+    name: 'Дрова 30 см - 2,24 стера в упаковке',
+    price: 3980,
+    originalPrice: null,
+    image: '/api/placeholder/400/400',
+    rating: 4.7,
+    reviews: 156,
+    badge: null,
+  },
+  {
+    id: 4,
+    name: 'Палета 1 стер дров - готово к использованию',
+    price: 1600,
+    originalPrice: null,
+    image: '/api/placeholder/400/400',
+    rating: 4.9,
+    reviews: 203,
+    badge: 'Популярное',
+  },
+  {
+    id: 5,
+    name: 'Дрова навалом 1м³',
+    price: 890,
+    originalPrice: null,
+    image: '/api/placeholder/400/400',
+    rating: 4.6,
+    reviews: 78,
+    badge: null,
+  },
+  {
+    id: 6,
+    name: 'Пеллеты премиум ENERBIO - 66 мешков 990кг',
+    price: 3950,
+    originalPrice: 4500,
+    image: '/api/placeholder/400/400',
+    rating: 4.8,
+    reviews: 145,
+    badge: 'Скидка',
+  },
+]
+
+export default function FeaturedProducts() {
+  const cartStore = useCartStore()
+  const favoritesStore = useFavoritesStore()
+
+  const handleAddToCart = (product: typeof products[0]) => {
+    cartStore.addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+    })
+    toast.success('Добавлено в корзину')
+  }
+
+  const handleToggleFavorite = (product: typeof products[0]) => {
+    const wasFavorite = favoritesStore.isFavorite(product.id)
+    favoritesStore.toggleFavorite({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+    })
+    toast.success(
+      !wasFavorite ? 'Добавлено в избранное' : 'Удалено из избранного'
+    )
+  }
+
+  return (
+    <section className="py-20 bg-gradient-to-b from-wood-50 to-white">
+      <div className="container mx-auto px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-12"
+        >
+          <h2 className="section-title">Популярные товары</h2>
+          <p className="section-subtitle">
+            Выберите лучшее для вашего дома из нашего каталога
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          {products.map((product, index) => (
+            <motion.div
+              key={product.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+            >
+              <div className="card group">
+                {/* Image */}
+                <div className="relative overflow-hidden bg-wood-100">
+                  {product.badge && (
+                    <div className="absolute top-4 left-4 z-10">
+                      <span className="bg-fire-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                        {product.badge}
+                      </span>
+                    </div>
+                  )}
+                  <div className="absolute top-4 right-4 z-10">
+                    <button
+                      onClick={() => handleToggleFavorite(product)}
+                      className="p-2 bg-white/90 hover:bg-white rounded-full transition"
+                    >
+                      <Heart
+                        size={20}
+                        className={favoritesStore.isFavorite(product.id) ? 'text-red-500 fill-red-500' : 'text-wood-600'}
+                      />
+                    </button>
+                  </div>
+                  <div className="aspect-square flex items-center justify-center">
+                    <div className="w-full h-full bg-gradient-to-br from-wood-200 to-wood-300 flex items-center justify-center">
+                      <span className="text-wood-400 text-4xl">🪵</span>
+                    </div>
+                  </div>
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition"></div>
+                </div>
+
+                {/* Content */}
+                <div className="p-6">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="flex items-center">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          size={14}
+                          className={i < Math.floor(product.rating) ? 'text-fire-500 fill-fire-500' : 'text-wood-300'}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-sm text-wood-600">({product.reviews})</span>
+                  </div>
+
+                  <h3 className="text-lg font-semibold text-wood-900 mb-3 line-clamp-2">
+                    {product.name}
+                  </h3>
+
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      {product.originalPrice ? (
+                        <div>
+                          <span className="text-wood-400 line-through text-sm mr-2">
+                            {product.originalPrice.toLocaleString('ru-RU')} ₽
+                          </span>
+                          <span className="text-2xl font-bold text-fire-600">
+                            {product.price.toLocaleString('ru-RU')} ₽
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="text-2xl font-bold text-wood-900">
+                          {product.price.toLocaleString('ru-RU')} ₽
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => handleAddToCart(product)}
+                    className="w-full btn-primary flex items-center justify-center gap-2"
+                  >
+                    <ShoppingCart size={20} />
+                    В корзину
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        <div className="text-center">
+          <Link href="/products" className="btn-outline text-lg px-8 py-4">
+            Смотреть все товары
+          </Link>
+        </div>
+      </div>
+    </section>
+  )
+}
+
