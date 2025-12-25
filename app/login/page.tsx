@@ -33,7 +33,8 @@ export default function LoginPage() {
         if (error) throw error
 
         toast.success('Добро пожаловать!')
-        router.push('/')
+        const redirectUrl = new URLSearchParams(window.location.search).get('redirect') || '/'
+        router.push(redirectUrl)
         router.refresh()
       } else {
         const { error } = await supabase.auth.signUp({

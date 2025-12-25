@@ -1,16 +1,14 @@
 'use client'
 
-import { useEffect, useCallback, useMemo } from 'react'
+import { useEffect } from 'react'
 import { ShoppingCart, Trash2, Plus, Minus } from 'lucide-react'
 import Link from 'next/link'
-import { useTranslations } from 'next-intl'
 import { useCartStore } from '@/lib/store/cartStore'
 import { useAuth } from '@/components/AuthProvider'
 import { calculatePriceBreakdown } from '@/lib/utils/taxes'
 import toast from 'react-hot-toast'
 
 export default function CartPage() {
-  const t = useTranslations()
   const cartItems = useCartStore((state) => state.items)
   const updateQuantity = useCartStore((state) => state.updateQuantity)
   const removeItem = useCartStore((state) => state.removeItem)
@@ -33,12 +31,12 @@ export default function CartPage() {
 
   const handleUpdateQuantity = async (id: number, quantity: number) => {
     await updateQuantity(id, quantity)
-    toast.success(t('cart.quantityUpdated'))
+    toast.success('Количество обновлено')
   }
 
   const handleRemoveItem = async (id: number) => {
     await removeItem(id)
-    toast.success(t('cart.itemRemoved'))
+    toast.success('Товар удален из корзины')
   }
 
   const subtotal = getTotal()
@@ -48,12 +46,12 @@ export default function CartPage() {
     <div className="min-h-screen bg-wood-50 py-20">
       <div className="container mx-auto px-4">
         <h1 className="text-4xl md:text-5xl font-serif font-bold text-wood-900 mb-8">
-          {t('cart.title')}
+          Корзина
         </h1>
 
         {isSyncing && (
           <div className="mb-4 text-wood-600">
-            {t('cart.syncing')}
+            Синхронизация корзины...
           </div>
         )}
 
@@ -61,13 +59,13 @@ export default function CartPage() {
           <div className="card-premium p-12 text-center">
             <ShoppingCart size={64} className="text-wood-300 mx-auto mb-4" />
             <h2 className="text-2xl font-semibold text-wood-900 mb-2">
-              {t('cart.empty')}
+              Ваша корзина пуста
             </h2>
             <p className="text-wood-600 mb-6">
-              {t('cart.emptyDescription')}
+              Добавьте товары в корзину, чтобы продолжить покупки
             </p>
             <Link href="/products" className="btn-primary inline-block">
-              {t('cart.goToCatalog')}
+              Перейти к каталогу
             </Link>
           </div>
         ) : (
@@ -119,40 +117,40 @@ export default function CartPage() {
             <div className="lg:col-span-1">
               <div className="card-premium p-6 sticky top-24">
                 <h2 className="text-2xl font-semibold text-wood-900 mb-6">
-                  {t('common.total')}
+                  Итого
                 </h2>
                 <div className="space-y-4 mb-6">
                   <div className="flex justify-between text-wood-700">
-                    <span>{t('common.subtotal')}</span>
+                    <span>Подытог</span>
                     <span>{priceBreakdown.subtotal.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ₽</span>
                   </div>
                   <div className="flex justify-between text-wood-700">
-                    <span>{t('common.tax')}</span>
+                    <span>НДС (20%)</span>
                     <span>{priceBreakdown.tax.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ₽</span>
                   </div>
                   <div className="flex justify-between text-wood-700">
-                    <span>{t('common.shipping')}</span>
-                    <span>{priceBreakdown.shipping === 0 ? t('common.free') : `${priceBreakdown.shipping.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ₽`}</span>
+                    <span>Доставка</span>
+                    <span>{priceBreakdown.shipping === 0 ? 'Бесплатно' : `${priceBreakdown.shipping.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ₽`}</span>
                   </div>
                   <div className="border-t border-wood-200 pt-4">
                     <div className="flex justify-between text-xl font-bold text-wood-900">
-                      <span>{t('common.total')}</span>
+                      <span>Всего</span>
                       <span>{priceBreakdown.total.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ₽</span>
                     </div>
-                    <p className="text-xs text-wood-500 mt-2">{t('common.taxIncluded')}</p>
+                    <p className="text-xs text-wood-500 mt-2">НДС включен</p>
                   </div>
                 </div>
                 <Link
                   href="/checkout"
                   className="w-full btn-primary mb-4 block text-center"
                 >
-                  {t('common.checkout')}
+                  Оформить заказ
                 </Link>
                 <Link
                   href="/products"
                   className="block text-center text-wood-600 hover:text-fire-600 transition"
                 >
-                  {t('common.continueShopping')}
+                  Продолжить покупки
                 </Link>
               </div>
             </div>

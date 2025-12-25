@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/components/AuthProvider'
 import { createClient } from '@/lib/supabase/client'
-import { User, Mail, Phone, MapPin, Package, Heart, Settings, Lock } from 'lucide-react'
+import { User, Mail, Phone, MapPin, Package, Heart, Settings } from 'lucide-react'
 import Link from 'next/link'
 import toast from 'react-hot-toast'
 
@@ -33,11 +33,13 @@ export default function ProfilePage() {
   const [saving, setSaving] = useState(false)
 
   const loadProfile = useCallback(async () => {
+    if (!user?.id) return
+    
     try {
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
-        .eq('id', user?.id)
+        .eq('id', user.id)
         .single()
 
       if (error && error.code !== 'PGRST116') throw error
@@ -49,8 +51,8 @@ export default function ProfilePage() {
         const { error: insertError } = await supabase
           .from('profiles')
           .insert({
-            id: user?.id,
-            email: user?.email || '',
+            id: user.id,
+            email: user.email || '',
           })
 
         if (insertError) throw insertError
@@ -74,13 +76,15 @@ export default function ProfilePage() {
   }, [user, authLoading, router, loadProfile])
 
   const handleSave = async () => {
+    if (!user?.id) return
+    
     setSaving(true)
     try {
       const { error } = await supabase
         .from('profiles')
         .upsert({
-          id: user?.id,
-          email: user?.email || '',
+          id: user.id,
+          email: user.email || '',
           ...profileData,
           updated_at: new Date().toISOString(),
         })
@@ -281,4 +285,3 @@ export default function ProfilePage() {
     </div>
   )
 }
-

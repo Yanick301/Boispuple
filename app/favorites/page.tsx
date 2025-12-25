@@ -1,101 +1,41 @@
 'use client'
 
-import { useEffect, useState, useCallback, useMemo } from 'react'
-import { useRouter } from 'next/navigation'
-import { useAuth } from '@/components/AuthProvider'
-import { createClient } from '@/lib/supabase/client'
+import { useEffect } from 'react'
 import { useFavoritesStore } from '@/lib/store/favoritesStore'
 import { Heart, ShoppingCart, Trash2 } from 'lucide-react'
 import { useCartStore } from '@/lib/store/cartStore'
+import { useAuth } from '@/components/AuthProvider'
 import toast from 'react-hot-toast'
+import Link from 'next/link'
 
 export default function FavoritesPage() {
-  const { user, loading: authLoading } = useAuth()
-  const router = useRouter()
-  const supabase = useMemo(() => createClient(), [])
   const favoritesStore = useFavoritesStore()
   const cartStore = useCartStore()
-  const [loading, setLoading] = useState(true)
+  const { user } = useAuth()
+  const favorites = favoritesStore.items
+  const syncWithSupabase = favoritesStore.syncWithSupabase
+  const loadFromSupabase = favoritesStore.loadFromSupabase
 
-  const loadFavorites = useCallback(async () => {
-    if (!user?.id) {
-      setLoading(false)
-      return
-    }
-    
-    try {
-      const { data, error } = await supabase
-        .from('user_favorites')
-        .select('*')
-        .eq('user_id', user.id)
-
-      if (error) throw error
-
-      // Sync with local storage
-      if (data) {
-        data.forEach((item) => {
-          favoritesStore.addFavorite({
-            id: item.product_id,
-            name: item.product_name,
-            price: item.price,
-          })
-        })
-      }
-    } catch (error: any) {
-      console.error('Error loading favorites:', error)
-    } finally {
-      setLoading(false)
-    }
-  }, [user?.id, supabase, favoritesStore])
-
+  // Sync favorites with Supabase when user logs in
   useEffect(() => {
-    if (!authLoading && !user) {
-      router.push('/login')
-      return
+    if (user?.id) {
+      // First load from Supabase
+      loadFromSupabase(user.id).then(() => {
+        // Then sync (merge if needed)
+        syncWithSupabase(user.id)
+      })
     }
-
-    if (user) {
-      loadFavorites()
-    }
-  }, [user, authLoading, router, loadFavorites])
+  }, [user?.id, syncWithSupabase, loadFromSupabase])
 
   const handleRemoveFavorite = async (id: number) => {
-    favoritesStore.removeFavorite(id)
-    
-    if (user) {
-      try {
-        await supabase
-          .from('user_favorites')
-          .delete()
-          .eq('user_id', user.id)
-          .eq('product_id', id)
-      } catch (error) {
-        console.error('Error removing favorite:', error)
-      }
-    }
-    
+    await favoritesStore.removeFavorite(id)
     toast.success('Удалено из избранного')
   }
 
-  const handleAddToCart = (item: typeof favoritesStore.items[0]) => {
-    cartStore.addItem(item)
+  const handleAddToCart = async (item: typeof favorites[0]) => {
+    await cartStore.addItem(item)
     toast.success('Добавлено в корзину')
   }
-
-  if (authLoading || loading) {
-    return (
-      <div className="min-h-screen bg-wood-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fire-600 mx-auto"></div>
-          <p className="mt-4 text-wood-600">Загрузка...</p>
-        </div>
-      </div>
-    )
-  }
-
-  if (!user) return null
-
-  const favorites = favoritesStore.items
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-wood-50 via-white to-wood-50 py-12">
@@ -114,9 +54,9 @@ export default function FavoritesPage() {
               <p className="text-wood-600 mb-6">
                 Добавьте товары в избранное, чтобы вернуться к ним позже
               </p>
-              <a href="/products" className="btn-primary inline-block">
+              <Link href="/products" className="btn-primary inline-block">
                 Перейти к каталогу
-              </a>
+              </Link>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -162,4 +102,3 @@ export default function FavoritesPage() {
     </div>
   )
 }
-

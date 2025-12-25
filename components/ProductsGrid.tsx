@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { ShoppingCart, Star, Heart, Filter } from 'lucide-react'
-import { useTranslations } from 'next-intl'
 import { useCartStore } from '@/lib/store/cartStore'
 import { useFavoritesStore } from '@/lib/store/favoritesStore'
 import toast from 'react-hot-toast'
@@ -72,7 +71,6 @@ interface ProductsGridProps {
 }
 
 export default function ProductsGrid({ category }: ProductsGridProps) {
-  const t = useTranslations()
   const [showFilters, setShowFilters] = useState(false)
   const [sortBy, setSortBy] = useState('popular')
   const cartStore = useCartStore()
@@ -84,7 +82,7 @@ export default function ProductsGrid({ category }: ProductsGridProps) {
       name: product.name,
       price: product.price,
     })
-    toast.success(t('products.addedToCart'))
+    toast.success('Добавлено в корзину')
   }
 
   const handleToggleFavorite = async (product: Product) => {
@@ -95,7 +93,7 @@ export default function ProductsGrid({ category }: ProductsGridProps) {
       price: product.price,
     })
     toast.success(
-      !wasFavorite ? t('products.addedToFavorites') : t('products.removedFromFavorites')
+      !wasFavorite ? 'Добавлено в избранное' : 'Удалено из избранного'
     )
   }
 
@@ -125,17 +123,17 @@ export default function ProductsGrid({ category }: ProductsGridProps) {
           className="flex items-center justify-center gap-2 text-wood-700 hover:text-fire-600 transition px-4 py-2 sm:py-2.5 border border-wood-200 rounded-lg hover:bg-wood-50 sm:border-0 sm:px-0"
         >
           <Filter size={18} className="sm:w-5 sm:h-5" />
-          <span className="text-sm sm:text-base">{t('common.search')}</span>
+          <span className="text-sm sm:text-base">Фильтры</span>
         </button>
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
           className="px-3 sm:px-4 py-2 text-sm sm:text-base border border-wood-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-fire-500 bg-white"
         >
-          <option value="popular">{t('products.popular')}</option>
-          <option value="price-low">{t('products.priceLow')}</option>
-          <option value="price-high">{t('products.priceHigh')}</option>
-          <option value="rating">{t('products.rating')}</option>
+          <option value="popular">Популярные</option>
+          <option value="price-low">Цена: по возрастанию</option>
+          <option value="price-high">Цена: по убыванию</option>
+          <option value="rating">По рейтингу</option>
         </select>
       </div>
 
@@ -155,7 +153,7 @@ export default function ProductsGrid({ category }: ProductsGridProps) {
                 <button
                   onClick={() => handleToggleFavorite(product)}
                   className="p-1.5 sm:p-2 bg-white/90 hover:bg-white rounded-full transition"
-                  aria-label={t('common.addToFavorites')}
+                  aria-label="Добавить в избранное"
                 >
                   <Heart
                     size={16}
@@ -181,7 +179,7 @@ export default function ProductsGrid({ category }: ProductsGridProps) {
                     />
                   ))}
                 </div>
-                <span className="text-xs sm:text-sm text-wood-600">({product.reviews} {t('products.reviews')})</span>
+                <span className="text-xs sm:text-sm text-wood-600">({product.reviews} отзывов)</span>
               </div>
 
               <h3 className="text-base sm:text-lg font-semibold text-wood-900 mb-2 sm:mb-3 line-clamp-2 min-h-[3rem]">
@@ -212,7 +210,7 @@ export default function ProductsGrid({ category }: ProductsGridProps) {
                 className="w-full btn-primary flex items-center justify-center gap-2 text-sm sm:text-base py-2.5 sm:py-3"
               >
                 <ShoppingCart size={18} className="sm:w-5 sm:h-5" />
-                {t('common.addToCart')}
+                В корзину
               </button>
             </div>
           </div>

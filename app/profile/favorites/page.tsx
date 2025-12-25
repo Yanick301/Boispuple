@@ -1,19 +1,19 @@
 'use client'
 
 import { useEffect } from 'react'
-import { useTranslations } from 'next-intl'
+import { useRouter } from 'next/navigation'
+import { useAuth } from '@/components/AuthProvider'
 import { useFavoritesStore } from '@/lib/store/favoritesStore'
 import { Heart, ShoppingCart, Trash2 } from 'lucide-react'
 import { useCartStore } from '@/lib/store/cartStore'
-import { useAuth } from '@/components/AuthProvider'
 import toast from 'react-hot-toast'
 import Link from 'next/link'
 
-export default function FavoritesPage() {
-  const t = useTranslations()
+export default function ProfileFavoritesPage() {
+  const { user, loading: authLoading } = useAuth()
+  const router = useRouter()
   const favoritesStore = useFavoritesStore()
   const cartStore = useCartStore()
-  const { user } = useAuth()
   const favorites = favoritesStore.items
   const syncWithSupabase = favoritesStore.syncWithSupabase
   const loadFromSupabase = favoritesStore.loadFromSupabase
@@ -29,35 +29,54 @@ export default function FavoritesPage() {
     }
   }, [user?.id, syncWithSupabase, loadFromSupabase])
 
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/login')
+    }
+  }, [user, authLoading, router])
+
   const handleRemoveFavorite = async (id: number) => {
     await favoritesStore.removeFavorite(id)
-    toast.success(t('products.removedFromFavorites'))
+    toast.success('Удалено из избранного')
   }
 
   const handleAddToCart = async (item: typeof favorites[0]) => {
     await cartStore.addItem(item)
-    toast.success(t('products.addedToCart'))
+    toast.success('Добавлено в корзину')
   }
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-wood-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fire-600 mx-auto"></div>
+          <p className="mt-4 text-wood-600">Загрузка...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!user) return null
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-wood-50 via-white to-wood-50 py-12">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-serif font-bold text-wood-900 mb-8">
-            {t('common.favorites')}
+            Избранное
           </h1>
 
           {favorites.length === 0 ? (
             <div className="card-premium p-12 text-center">
               <Heart size={64} className="text-wood-300 mx-auto mb-4" />
               <h2 className="text-2xl font-semibold text-wood-900 mb-2">
-                {t('common.favorites')}
+                Ваш список избранного пуст
               </h2>
               <p className="text-wood-600 mb-6">
                 Добавьте товары в избранное, чтобы вернуться к ним позже
               </p>
               <Link href="/products" className="btn-primary inline-block">
-                {t('cart.goToCatalog')}
+                Перейти к каталогу
               </Link>
             </div>
           ) : (
@@ -92,7 +111,7 @@ export default function FavoritesPage() {
                       className="w-full btn-primary flex items-center justify-center gap-2"
                     >
                       <ShoppingCart size={20} />
-                      {t('common.addToCart')}
+                      В корзину
                     </button>
                   </div>
                 </div>
@@ -104,5 +123,3 @@ export default function FavoritesPage() {
     </div>
   )
 }
-
-

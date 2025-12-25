@@ -2,60 +2,33 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
-import { useLocale, useTranslations } from 'next-intl'
-import { Menu, X, ShoppingCart, User, Phone, Search, Heart, LogOut, Globe } from 'lucide-react'
+import { usePathname } from 'next/navigation'
+import { Menu, X, ShoppingCart, User, Phone, Search, Heart, LogOut } from 'lucide-react'
 import { useAuth } from './AuthProvider'
 import { useCartStore } from '@/lib/store/cartStore'
-import { locales } from '@/i18n'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
-  const [isLangMenuOpen, setIsLangMenuOpen] = useState(false)
   const { user, signOut } = useAuth()
   const cartCount = useCartStore((state) => state.getItemCount())
-  const t = useTranslations()
-  const locale = useLocale()
-  const router = useRouter()
   const pathname = usePathname()
 
-  const switchLocale = (newLocale: string) => {
-    try {
-      // Remove current locale from pathname
-      const currentPath = pathname || '/'
-      const pathWithoutLocale = currentPath.replace(`/${locale}`, '') || '/'
-      // Navigate to new locale
-      router.push(`/${newLocale}${pathWithoutLocale}`)
-      setIsLangMenuOpen(false)
-    } catch (error) {
-      console.error('Error switching locale:', error)
-      // Fallback to root with new locale
-      router.push(`/${newLocale}`)
-      setIsLangMenuOpen(false)
-    }
-  }
-
   const menuItems = [
-    { name: t('header.home'), href: '/' },
-    { name: t('header.about'), href: '/about' },
-    { name: t('header.products'), href: '/products' },
-    { name: t('header.faq'), href: '/faq' },
-    { name: t('header.contact'), href: '/contact' },
+    { name: 'Главная', href: '/' },
+    { name: 'О нас', href: '/about' },
+    { name: 'Товары', href: '/products' },
+    { name: 'FAQ', href: '/faq' },
+    { name: 'Контакты', href: '/contact' },
   ]
 
   const categories = [
-    { name: t('categories.firewood'), href: '/products/firewood' },
-    { name: t('categories.pellets'), href: '/products/pellets' },
-    { name: t('categories.stoves'), href: '/products/stoves' },
-    { name: t('categories.boilers'), href: '/products/boilers' },
-    { name: t('categories.accessories'), href: '/products/accessories' },
+    { name: 'Дрова', href: '/products/firewood' },
+    { name: 'Пеллеты', href: '/products/pellets' },
+    { name: 'Печи', href: '/products/stoves' },
+    { name: 'Котлы', href: '/products/boilers' },
+    { name: 'Аксессуары', href: '/products/accessories' },
   ]
-
-  const localeNames: Record<string, string> = {
-    ru: 'Русский',
-    fr: 'Français',
-  }
 
   return (
     <header className="bg-white shadow-lg sticky top-0 z-50">
@@ -68,43 +41,18 @@ export default function Header() {
                 <Phone size={14} className="sm:w-4 sm:h-4" />
                 <span className="text-xs sm:text-sm">+7 (999) 123-45-67</span>
               </a>
-              <span className="hidden sm:inline">{t('header.delivery')}</span>
+              <span className="hidden sm:inline">Доставка по всей России</span>
             </div>
             <div className="flex items-center gap-3 sm:gap-4">
-              {/* Language Selector */}
-              <div className="relative">
-                <button
-                  onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
-                  className="flex items-center gap-1.5 sm:gap-2 hover:text-fire-400 transition whitespace-nowrap"
-                >
-                  <Globe size={14} className="sm:w-4 sm:h-4" />
-                  <span className="text-xs sm:text-sm">{localeNames[locale] || locale.toUpperCase()}</span>
-                </button>
-                {isLangMenuOpen && (
-                  <div className="absolute right-0 mt-2 bg-white rounded-lg shadow-xl border border-wood-100 overflow-hidden z-50 min-w-[120px]">
-                    {locales.map((loc) => (
-                      <button
-                        key={loc}
-                        onClick={() => switchLocale(loc)}
-                        className={`w-full text-left px-4 py-2 text-sm hover:bg-wood-50 transition ${
-                          locale === loc ? 'bg-wood-100 font-semibold text-fire-600' : 'text-wood-700'
-                        }`}
-                      >
-                        {localeNames[loc]}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
               {user ? (
                 <Link href="/profile" className="flex items-center gap-1.5 sm:gap-2 hover:text-fire-400 transition whitespace-nowrap">
                   <User size={14} className="sm:w-4 sm:h-4" />
-                  <span className="hidden xs:inline text-xs sm:text-sm">{t('header.myProfile')}</span>
+                  <span className="hidden xs:inline text-xs sm:text-sm">Мой профиль</span>
                 </Link>
               ) : (
                 <Link href="/login" className="flex items-center gap-1.5 sm:gap-2 hover:text-fire-400 transition whitespace-nowrap">
                   <User size={14} className="sm:w-4 sm:h-4" />
-                  <span className="text-xs sm:text-sm">{t('header.loginRegister')}</span>
+                  <span className="text-xs sm:text-sm">Вход / Регистрация</span>
                 </Link>
               )}
             </div>
@@ -141,20 +89,20 @@ export default function Header() {
 
           {/* Actions */}
           <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 flex-shrink-0">
-            <button className="p-1.5 sm:p-2 hover:bg-wood-100 rounded-lg transition" aria-label={t('common.search')}>
+            <button className="p-1.5 sm:p-2 hover:bg-wood-100 rounded-lg transition" aria-label="Поиск">
               <Search size={18} className="sm:w-6 sm:h-6 text-wood-700" />
             </button>
             <Link
               href="/favorites"
               className="relative p-1.5 sm:p-2 hover:bg-wood-100 rounded-lg transition"
-              aria-label={t('common.favorites')}
+              aria-label="Избранное"
             >
               <Heart size={18} className="sm:w-6 sm:h-6 text-wood-700" />
             </Link>
             <Link
               href="/cart"
               className="relative p-1.5 sm:p-2 hover:bg-wood-100 rounded-lg transition"
-              aria-label={t('common.cart')}
+              aria-label="Корзина"
             >
               <ShoppingCart size={18} className="sm:w-6 sm:h-6 text-wood-700" />
               {cartCount > 0 && (
@@ -168,7 +116,7 @@ export default function Header() {
                 <button
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                   className="p-1.5 sm:p-2 hover:bg-wood-100 rounded-lg transition"
-                  aria-label={t('header.myProfile')}
+                  aria-label="Мой профиль"
                 >
                   <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-fire-500 to-fire-700 rounded-full flex items-center justify-center text-white text-xs sm:text-sm font-bold">
                     {user.email?.[0]?.toUpperCase() || 'U'}
@@ -181,14 +129,14 @@ export default function Header() {
                       className="block px-4 py-3 hover:bg-wood-50 transition text-wood-700"
                       onClick={() => setIsUserMenuOpen(false)}
                     >
-                      {t('header.myProfile')}
+                      Мой профиль
                     </Link>
                     <Link
                       href="/profile/orders"
                       className="block px-4 py-3 hover:bg-wood-50 transition text-wood-700"
                       onClick={() => setIsUserMenuOpen(false)}
                     >
-                      {t('common.orders')}
+                      Мои заказы
                     </Link>
                     <button
                       onClick={async () => {
@@ -198,7 +146,7 @@ export default function Header() {
                       className="w-full text-left px-4 py-3 hover:bg-wood-50 transition text-wood-700 flex items-center gap-2"
                     >
                       <LogOut size={16} />
-                      {t('common.logout')}
+                      Выйти
                     </button>
                   </div>
                 )}
@@ -247,7 +195,7 @@ export default function Header() {
               </Link>
             ))}
             <div className="pt-4 border-t border-wood-200 mt-2">
-              <p className="text-sm font-semibold text-wood-900 mb-2">{t('header.categories')}:</p>
+              <p className="text-sm font-semibold text-wood-900 mb-2">Категории:</p>
               {categories.map((category) => (
                 <Link
                   key={category.name}

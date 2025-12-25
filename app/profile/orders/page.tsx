@@ -150,7 +150,7 @@ export default function OrdersPage() {
                     </div>
                     <div className="mt-4 md:mt-0 text-right">
                       <div className="text-2xl font-bold text-wood-900 mb-2">
-                        {order.total.toLocaleString('ru-RU')} ₽
+                        {order.total.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ₽
                       </div>
                       <div className="flex items-center justify-end gap-2">
                         {getStatusIcon(order.status)}
@@ -175,7 +175,7 @@ export default function OrdersPage() {
                         </div>
                         <div className="text-right">
                           <p className="font-semibold text-wood-900">
-                            {(item.price * item.quantity).toLocaleString('ru-RU')} ₽
+                            {(item.price * item.quantity).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ₽
                           </p>
                         </div>
                       </div>
@@ -190,4 +190,3 @@ export default function OrdersPage() {
     </div>
   )
 }
-

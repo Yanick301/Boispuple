@@ -32,4 +32,3 @@ export function calculatePriceBreakdown(subtotal: number): PriceBreakdown {
 export function formatPrice(price: number, locale: string = 'ru-RU'): string {
   return `${price.toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ₽`
 }
-
