@@ -10,25 +10,37 @@ const intlMiddleware = createMiddleware({
 });
 
 export async function middleware(request: NextRequest) {
-  // First handle internationalization
-  const intlResponse = intlMiddleware(request);
-  
-  // Then handle Supabase session - but only if intl didn't redirect
-  if (intlResponse.status === 200 || intlResponse.status === 307 || intlResponse.status === 308) {
-    const supabaseResponse = await updateSession(request);
+  try {
+    // First handle internationalization
+    const intlResponse = intlMiddleware(request);
     
-    // Merge headers from Supabase into intl response
-    supabaseResponse.headers.forEach((value, key) => {
-      intlResponse.headers.set(key, value);
-    });
+    // Then handle Supabase session - but only if intl didn't redirect
+    if (intlResponse && (intlResponse.status === 200 || intlResponse.status === 307 || intlResponse.status === 308)) {
+      try {
+        const supabaseResponse = await updateSession(request);
+        
+        if (supabaseResponse) {
+          // Merge headers from Supabase into intl response
+          supabaseResponse.headers.forEach((value, key) => {
+            intlResponse.headers.set(key, value);
+          });
+          
+          // Merge cookies
+          supabaseResponse.cookies.getAll().forEach((cookie) => {
+            intlResponse.cookies.set(cookie.name, cookie.value, cookie);
+          });
+        }
+      } catch (supabaseError) {
+        console.error('Supabase middleware error:', supabaseError);
+        // Continue with intl response even if Supabase fails
+      }
+    }
     
-    // Merge cookies
-    supabaseResponse.cookies.getAll().forEach((cookie) => {
-      intlResponse.cookies.set(cookie.name, cookie.value, cookie);
-    });
+    return intlResponse || NextResponse.next();
+  } catch (error) {
+    console.error('Middleware error:', error);
+    return NextResponse.next();
   }
-  
-  return intlResponse;
 }
 
 export const config = {

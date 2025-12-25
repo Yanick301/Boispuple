@@ -24,15 +24,26 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter()
 
   useEffect(() => {
+    let mounted = true
+
     const getUser = async () => {
       try {
-        const { data: { user } } = await supabase.auth.getUser()
-        setUser(user)
-        setLoading(false)
+        const { data: { user }, error } = await supabase.auth.getUser()
+        if (mounted) {
+          if (error) {
+            console.error('Error getting user:', error)
+            setUser(null)
+          } else {
+            setUser(user)
+          }
+          setLoading(false)
+        }
       } catch (error) {
         console.error('Error getting user:', error)
-        setUser(null)
-        setLoading(false)
+        if (mounted) {
+          setUser(null)
+          setLoading(false)
+        }
       }
     }
 
@@ -40,6 +51,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        if (!mounted) return
         try {
           setUser(session?.user ?? null)
           setLoading(false)
@@ -55,14 +67,23 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     )
 
     return () => {
+      mounted = false
       subscription?.unsubscribe()
     }
   }, [router, supabase])
 
   const signOut = async () => {
-    await supabase.auth.signOut()
-    router.push('/')
-    router.refresh()
+    try {
+      await supabase.auth.signOut()
+      // Get current locale from pathname or use default
+      const pathname = window.location.pathname
+      const locale = pathname.split('/')[1] || 'ru'
+      router.push(`/${locale}`)
+      router.refresh()
+    } catch (error) {
+      console.error('Error signing out:', error)
+      router.push('/ru')
+    }
   }
 
   return (

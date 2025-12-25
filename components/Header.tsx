@@ -21,11 +21,19 @@ export default function Header() {
   const pathname = usePathname()
 
   const switchLocale = (newLocale: string) => {
-    // Remove current locale from pathname
-    const pathWithoutLocale = pathname.replace(`/${locale}`, '') || '/'
-    // Navigate to new locale
-    router.push(`/${newLocale}${pathWithoutLocale}`)
-    setIsLangMenuOpen(false)
+    try {
+      // Remove current locale from pathname
+      const currentPath = pathname || '/'
+      const pathWithoutLocale = currentPath.replace(`/${locale}`, '') || '/'
+      // Navigate to new locale
+      router.push(`/${newLocale}${pathWithoutLocale}`)
+      setIsLangMenuOpen(false)
+    } catch (error) {
+      console.error('Error switching locale:', error)
+      // Fallback to root with new locale
+      router.push(`/${newLocale}`)
+      setIsLangMenuOpen(false)
+    }
   }
 
   const menuItems = [
