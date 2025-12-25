@@ -1,0 +1,108 @@
+{
+  "common": {
+    "addToCart": "В корзину",
+    "removeFromCart": "Удалить из корзины",
+    "addToFavorites": "Добавить в избранное",
+    "removeFromFavorites": "Удалить из избранного",
+    "search": "Поиск",
+    "cart": "Корзина",
+    "favorites": "Избранное",
+    "profile": "Мой профиль",
+    "orders": "Мои заказы",
+    "login": "Войти",
+    "register": "Регистрация",
+    "logout": "Выйти",
+    "continueShopping": "Продолжить покупки",
+    "checkout": "Оформить заказ",
+    "total": "Всего",
+    "shipping": "Доставка",
+    "free": "Бесплатно",
+    "items": "Товары",
+    "quantity": "Количество",
+    "price": "Цена",
+    "save": "Сохранить",
+    "cancel": "Отмена",
+    "delete": "Удалить",
+    "edit": "Редактировать",
+    "close": "Закрыть",
+    "loading": "Загрузка...",
+    "error": "Ошибка",
+    "success": "Успешно"
+  },
+  "header": {
+    "home": "Главная",
+    "about": "О нас",
+    "products": "Продукция",
+    "faq": "FAQ",
+    "contact": "Контакты",
+    "delivery": "Доставка 24/7",
+    "myProfile": "Мой профиль",
+    "loginRegister": "Войти / Регистрация",
+    "categories": "Категории"
+  },
+  "categories": {
+    "firewood": "Дрова для отопления",
+    "pellets": "Пеллеты и гранулы",
+    "stoves": "Печи и камины",
+    "boilers": "Котлы",
+    "accessories": "Аксессуары"
+  },
+  "cart": {
+    "title": "Корзина",
+    "empty": "Ваша корзина пуста",
+    "emptyDescription": "Добавьте товары в корзину, чтобы продолжить покупки",
+    "goToCatalog": "Перейти к каталогу",
+    "itemRemoved": "Товар удален из корзины",
+    "itemAdded": "Добавлено в корзину",
+    "quantityUpdated": "Количество обновлено",
+    "syncing": "Синхронизация корзины...",
+    "syncError": "Ошибка синхронизации корзины"
+  },
+  "products": {
+    "addToCart": "В корзину",
+    "addedToCart": "Добавлено в корзину",
+    "addedToFavorites": "Добавлено в избранное",
+    "removedFromFavorites": "Удалено из избранного",
+    "reviews": "отзывов",
+    "rating": "Рейтинг",
+    "sortBy": "Сортировать по",
+    "popular": "Популярные",
+    "priceLow": "Цена: по возрастанию",
+    "priceHigh": "Цена: по убыванию",
+    "rating": "Рейтинг"
+  },
+  "checkout": {
+    "title": "Оформление заказа",
+    "shippingAddress": "Адрес доставки",
+    "paymentMethod": "Способ оплаты",
+    "orderSummary": "Сводка заказа",
+    "placeOrder": "Оформить заказ",
+    "orderPlaced": "Заказ оформлен",
+    "orderError": "Ошибка при оформлении заказа"
+  },
+  "profile": {
+    "title": "Мой профиль",
+    "personalInfo": "Личная информация",
+    "fullName": "Полное имя",
+    "email": "Email",
+    "phone": "Телефон",
+    "address": "Адрес",
+    "city": "Город",
+    "postalCode": "Почтовый индекс",
+    "country": "Страна",
+    "saveChanges": "Сохранить изменения",
+    "changesSaved": "Изменения сохранены",
+    "errorSaving": "Ошибка при сохранении"
+  },
+  "footer": {
+    "about": "О нас",
+    "products": "Продукция",
+    "customerService": "Служба поддержки",
+    "contact": "Контакты",
+    "followUs": "Следите за нами",
+    "newsletter": "Подписка на рассылку",
+    "subscribe": "Подписаться",
+    "rights": "Все права защищены"
+  }
+}
+

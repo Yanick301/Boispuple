@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ShoppingCart, Star, Heart } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { useCartStore } from '@/lib/store/cartStore'
 import { useFavoritesStore } from '@/lib/store/favoritesStore'
 import toast from 'react-hot-toast'
@@ -71,16 +72,17 @@ const products = [
 ]
 
 export default function FeaturedProducts() {
+  const t = useTranslations()
   const cartStore = useCartStore()
   const favoritesStore = useFavoritesStore()
 
-  const handleAddToCart = (product: typeof products[0]) => {
-    cartStore.addItem({
+  const handleAddToCart = async (product: typeof products[0]) => {
+    await cartStore.addItem({
       id: product.id,
       name: product.name,
       price: product.price,
     })
-    toast.success('Добавлено в корзину')
+    toast.success(t('products.addedToCart'))
   }
 
   const handleToggleFavorite = (product: typeof products[0]) => {
@@ -91,7 +93,7 @@ export default function FeaturedProducts() {
       price: product.price,
     })
     toast.success(
-      !wasFavorite ? 'Добавлено в избранное' : 'Удалено из избранного'
+      !wasFavorite ? t('products.addedToFavorites') : t('products.removedFromFavorites')
     )
   }
 
@@ -192,7 +194,7 @@ export default function FeaturedProducts() {
                     className="w-full btn-primary flex items-center justify-center gap-2 text-sm sm:text-base py-2.5 sm:py-3"
                   >
                     <ShoppingCart size={18} className="sm:w-5 sm:h-5" />
-                    В корзину
+                    {t('common.addToCart')}
                   </button>
                 </div>
               </div>
