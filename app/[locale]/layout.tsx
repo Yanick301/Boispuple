@@ -26,16 +26,26 @@ export default async function LocaleLayout({
   children: React.ReactNode
   params: Promise<{ locale: string }>
 }) {
-  const { locale } = await params
+  let locale: string
+  let messages
   
-  // Ensure that the incoming `locale` is valid
-  if (!locales.includes(locale as any)) {
-    notFound();
-  }
+  try {
+    const resolvedParams = await params
+    locale = resolvedParams.locale
+    
+    // Ensure that the incoming `locale` is valid
+    if (!locales.includes(locale as any)) {
+      notFound();
+    }
 
-  // Providing all messages to the client
-  // side is the easiest way to get started
-  const messages = await getMessages({ locale });
+    // Providing all messages to the client
+    messages = await getMessages({ locale });
+  } catch (error) {
+    console.error('Error in LocaleLayout:', error)
+    // Fallback to default locale
+    locale = 'ru'
+    messages = await getMessages({ locale: 'ru' });
+  }
 
   return (
     <html lang={locale}>
@@ -54,4 +64,3 @@ export default async function LocaleLayout({
     </html>
   )
 }
-
