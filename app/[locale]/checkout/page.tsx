@@ -2,13 +2,16 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { useAuth } from '@/components/AuthProvider'
 import { useCartStore } from '@/lib/store/cartStore'
 import { createClient } from '@/lib/supabase/client'
+import { calculatePriceBreakdown } from '@/lib/utils/taxes'
 import { MapPin, User, Phone, CreditCard, Truck, Lock } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 export default function CheckoutPage() {
+  const t = useTranslations()
   const { user } = useAuth()
   const router = useRouter()
   const supabase = useMemo(() => createClient(), [])
@@ -72,11 +75,29 @@ export default function CheckoutPage() {
     setLoading(true)
 
     try {
-      const total = getTotal()
-      const shipping = total > 10000 ? 0 : 500
+      const subtotal = getTotal()
+      const priceBreakdown = calculatePriceBreakdown(subtotal)
 
       if (!user?.id) {
         throw new Error('Пользователь не авторизован')
+      }
+
+      // Save profile data
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .update({
+          full_name: profileData.full_name,
+          phone: profileData.phone,
+          address: profileData.address,
+          city: profileData.city,
+          postal_code: profileData.postal_code,
+          country: profileData.country,
+        })
+        .eq('id', user.id)
+
+      if (profileError) {
+        console.error('Error updating profile:', profileError)
+        // Continue anyway, don't block order creation
       }
 
       // Create order
@@ -84,7 +105,7 @@ export default function CheckoutPage() {
         .from('orders')
         .insert({
           user_id: user.id,
-          total: total + shipping,
+          total: priceBreakdown.total,
           status: 'pending',
           shipping_address: profileData.address,
           shipping_city: profileData.city,
@@ -112,7 +133,7 @@ export default function CheckoutPage() {
       if (itemsError) throw itemsError
 
       // Clear cart
-      clearCart()
+      await clearCart()
 
       // Clear user cart in Supabase
       if (user?.id) {
@@ -122,24 +143,24 @@ export default function CheckoutPage() {
           .eq('user_id', user.id)
       }
 
-      toast.success('Заказ успешно оформлен!')
+      toast.success(t('checkout.orderPlaced'))
       router.push(`/profile/orders`)
     } catch (error: any) {
-      toast.error(error.message || 'Ошибка оформления заказа')
+      toast.error(error.message || t('checkout.orderError'))
     } finally {
       setLoading(false)
     }
   }
 
-  const total = getTotal()
-  const shipping = total > 10000 ? 0 : 500
+  const subtotal = getTotal()
+  const priceBreakdown = calculatePriceBreakdown(subtotal)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-wood-50 via-white to-wood-50 py-12">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-serif font-bold text-wood-900 mb-8">
-            Оформление заказа
+            {t('checkout.title')}
           </h1>
 
           <form onSubmit={handleSubmit}>
@@ -152,7 +173,7 @@ export default function CheckoutPage() {
                     <div className="p-3 bg-fire-100 rounded-lg">
                       <Truck className="text-fire-600" size={24} />
                     </div>
-                    <h2 className="text-2xl font-semibold text-wood-900">Доставка</h2>
+                    <h2 className="text-2xl font-semibold text-wood-900">{t('checkout.shippingAddress')}</h2>
                   </div>
 
                   <div className="space-y-4">
@@ -238,7 +259,7 @@ export default function CheckoutPage() {
                     <div className="p-3 bg-fire-100 rounded-lg">
                       <CreditCard className="text-fire-600" size={24} />
                     </div>
-                    <h2 className="text-2xl font-semibold text-wood-900">Способ оплаты</h2>
+                    <h2 className="text-2xl font-semibold text-wood-900">{t('checkout.paymentMethod')}</h2>
                   </div>
 
                   <div className="space-y-3">
@@ -277,7 +298,7 @@ export default function CheckoutPage() {
               {/* Order Summary */}
               <div className="lg:col-span-1">
                 <div className="card-premium p-6 sticky top-24">
-                  <h2 className="text-xl font-semibold text-wood-900 mb-6">Ваш заказ</h2>
+                  <h2 className="text-xl font-semibold text-wood-900 mb-6">{t('checkout.orderSummary')}</h2>
 
                   <div className="space-y-3 mb-6">
                     {cartItems.map((item) => (
@@ -286,7 +307,7 @@ export default function CheckoutPage() {
                           {item.name} × {item.quantity}
                         </span>
                         <span className="font-semibold text-wood-900">
-                          {(item.price * item.quantity).toLocaleString('ru-RU')} ₽
+                          {(item.price * item.quantity).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ₽
                         </span>
                       </div>
                     ))}
@@ -294,18 +315,23 @@ export default function CheckoutPage() {
 
                   <div className="border-t border-wood-200 pt-4 space-y-3 mb-6">
                     <div className="flex justify-between text-wood-700">
-                      <span>Товары</span>
-                      <span>{total.toLocaleString('ru-RU')} ₽</span>
+                      <span>{t('common.subtotal')}</span>
+                      <span>{priceBreakdown.subtotal.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ₽</span>
                     </div>
                     <div className="flex justify-between text-wood-700">
-                      <span>Доставка</span>
-                      <span>{shipping === 0 ? 'Бесплатно' : `${shipping.toLocaleString('ru-RU')} ₽`}</span>
+                      <span>{t('common.tax')}</span>
+                      <span>{priceBreakdown.tax.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ₽</span>
+                    </div>
+                    <div className="flex justify-between text-wood-700">
+                      <span>{t('common.shipping')}</span>
+                      <span>{priceBreakdown.shipping === 0 ? t('common.free') : `${priceBreakdown.shipping.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ₽`}</span>
                     </div>
                     <div className="border-t border-wood-200 pt-3">
                       <div className="flex justify-between text-xl font-bold text-wood-900">
-                        <span>Итого</span>
-                        <span>{(total + shipping).toLocaleString('ru-RU')} ₽</span>
+                        <span>{t('common.total')}</span>
+                        <span>{priceBreakdown.total.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ₽</span>
                       </div>
+                      <p className="text-xs text-wood-500 mt-2">{t('common.taxIncluded')}</p>
                     </div>
                   </div>
 
@@ -315,7 +341,7 @@ export default function CheckoutPage() {
                     className="w-full btn-primary mb-4 disabled:opacity-50 flex items-center justify-center gap-2"
                   >
                     <Lock size={20} />
-                    {loading ? 'Оформление...' : 'Оформить заказ'}
+                    {loading ? t('common.loading') : t('checkout.placeOrder')}
                   </button>
 
                   <p className="text-xs text-wood-500 text-center">

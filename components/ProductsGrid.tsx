@@ -87,9 +87,9 @@ export default function ProductsGrid({ category }: ProductsGridProps) {
     toast.success(t('products.addedToCart'))
   }
 
-  const handleToggleFavorite = (product: Product) => {
+  const handleToggleFavorite = async (product: Product) => {
     const wasFavorite = favoritesStore.isFavorite(product.id)
-    favoritesStore.toggleFavorite({
+    await favoritesStore.toggleFavorite({
       id: product.id,
       name: product.name,
       price: product.price,

@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { useCartStore } from '@/lib/store/cartStore'
 import { useAuth } from '@/components/AuthProvider'
+import { calculatePriceBreakdown } from '@/lib/utils/taxes'
 import toast from 'react-hot-toast'
 
 export default function CartPage() {
@@ -40,8 +41,8 @@ export default function CartPage() {
     toast.success(t('cart.itemRemoved'))
   }
 
-  const total = getTotal()
-  const shipping = total > 10000 ? 0 : 500
+  const subtotal = getTotal()
+  const priceBreakdown = calculatePriceBreakdown(subtotal)
 
   return (
     <div className="min-h-screen bg-wood-50 py-20">
@@ -122,18 +123,23 @@ export default function CartPage() {
                 </h2>
                 <div className="space-y-4 mb-6">
                   <div className="flex justify-between text-wood-700">
-                    <span>{t('common.items')}</span>
-                    <span>{total.toLocaleString('ru-RU')} ₽</span>
+                    <span>{t('common.subtotal')}</span>
+                    <span>{priceBreakdown.subtotal.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ₽</span>
+                  </div>
+                  <div className="flex justify-between text-wood-700">
+                    <span>{t('common.tax')}</span>
+                    <span>{priceBreakdown.tax.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ₽</span>
                   </div>
                   <div className="flex justify-between text-wood-700">
                     <span>{t('common.shipping')}</span>
-                    <span>{shipping === 0 ? t('common.free') : `${shipping.toLocaleString('ru-RU')} ₽`}</span>
+                    <span>{priceBreakdown.shipping === 0 ? t('common.free') : `${priceBreakdown.shipping.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ₽`}</span>
                   </div>
                   <div className="border-t border-wood-200 pt-4">
                     <div className="flex justify-between text-xl font-bold text-wood-900">
                       <span>{t('common.total')}</span>
-                      <span>{(total + shipping).toLocaleString('ru-RU')} ₽</span>
+                      <span>{priceBreakdown.total.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ₽</span>
                     </div>
+                    <p className="text-xs text-wood-500 mt-2">{t('common.taxIncluded')}</p>
                   </div>
                 </div>
                 <Link

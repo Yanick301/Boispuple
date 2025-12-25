@@ -85,9 +85,9 @@ export default function FeaturedProducts() {
     toast.success(t('products.addedToCart'))
   }
 
-  const handleToggleFavorite = (product: typeof products[0]) => {
+  const handleToggleFavorite = async (product: typeof products[0]) => {
     const wasFavorite = favoritesStore.isFavorite(product.id)
-    favoritesStore.toggleFavorite({
+    await favoritesStore.toggleFavorite({
       id: product.id,
       name: product.name,
       price: product.price,
